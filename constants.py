@@ -4,7 +4,8 @@ import math
 constants = [
     (math.pi, u"\u03C0", "pi"),
     (2 * math.pi, u"\u03C4", "tau"),
-    (math.sqrt(2), u"\u221A2", "root2")
+    (math.sqrt(2), u"\u221A2", "root2"),
+    (math.sqrt(3), u"\u221A3", "root3")
 ]
 
 
