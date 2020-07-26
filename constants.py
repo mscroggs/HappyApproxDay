@@ -48,7 +48,7 @@ class Multiple(BaseConstant):
     def __init__(self, a, b):
         assert isinstance(a, int)
         super().__init__(
-            a* b.value,
+            a * b.value,
             f"{a}{b}",
             b.includes.union({"multiple"}))
 
@@ -60,9 +60,10 @@ def all_constants(combos):
         options += combine(options)
     return options
 
+
 def combine(options):
     new = []
-    for i in range(2,6):
+    for i in range(2, 6):
         for c in options:
             if "multiple" not in c.includes:
                 new.append(Multiple(i, c))
