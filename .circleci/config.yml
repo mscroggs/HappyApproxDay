@@ -11,8 +11,8 @@ jobs:
       - python/load-cache
       - python/install-deps
       - run:
-          command: pip3 install flake8 pytest
-          name: Install flake8 and pytest
+          command: pip3 install flake8
+          name: Install flake8
       - python/save-cache
       - run:
           command: python3 -m flake8 .
