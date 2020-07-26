@@ -13,7 +13,7 @@ now = datetime.now()
 approx_day = get_approximation_day(now.day, now.month)
 
 if approx_day is not None:
-    tweet = "Happy " + str(approx_day) +" Approximation Day!"
+    tweet = "Happy " + str(approx_day) + " Approximation Day!"
 
     if not test:
         import config as c
