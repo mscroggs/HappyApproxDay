@@ -11,12 +11,15 @@ jobs:
       - python/load-cache
       - python/install-deps
       - run:
-          command: pip3 install flake8
-          name: Install flake8
+          command: pip3 install flake8 pytest
+          name: Install flake8 and pytest
       - python/save-cache
       - run:
           command: python3 -m flake8 .
           name: Flake8 checks
+      - run:
+          command: python3 -m pytest test
+          name: Run unit tests
       - run:
           command: python3 tweet.py test
           name: Test
