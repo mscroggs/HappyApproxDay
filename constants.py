@@ -45,6 +45,14 @@ class Sum(BaseConstant):
             a.includes.union(b.includes))
 
 
+class Product(BaseConstant):
+    def __init__(self, a, b):
+        super().__init__(
+            a.value * b.value,
+            str(a) + str(b),
+            a.includes.union(b.includes))
+
+
 class Multiple(BaseConstant):
     def __init__(self, a, b):
         assert isinstance(a, int)
@@ -76,7 +84,10 @@ def combine(options):
                 new.append(Difference(c, d))
             elif d.value > c.value:
                 new.append(Difference(d, c))
-
+            if "+" not in str(c) and "-" not in str(c):
+                if "+" not in str(d) and "-" not in str(d):
+                    if not math.isclose(c.value, d.value):
+                        new.append(Product(c, d))
     out = []
     for n in new:
         for c in options:
@@ -91,13 +102,16 @@ def get_constants(value, combos):
     """Return constants that are close to value."""
     out = []
     for c in all_constants(combos):
-        if abs(c.value % 1 - value % 1) <= 0.1:
-            d = int((c.value - value) // 1)
-            if d == 0:
+        difference = c.value - value
+        closest_int = int(math.floor(difference + 0.5))
+        if abs(difference - closest_int) / value <= 0.002:
+            if closest_int == 0:
                 out.append(c)
             elif "int" not in c.includes:
-                if d > 0:
-                    out.append(Difference(c, Constant(d, str(d), "int")))
+                if closest_int > 0:
+                    out.append(Difference(
+                        c, Constant(closest_int, str(closest_int), "int")))
                 else:
-                    out.append(Sum(c, Constant(-d, str(-d), "int")))
+                    out.append(Sum(
+                        c, Constant(-closest_int, str(-closest_int), "int")))
     return out
