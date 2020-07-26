@@ -13,11 +13,11 @@ now = datetime.now()
 approx_day = get_approximation_day(now.day, now.month)
 
 if approx_day is not None:
-    tweet = f"Happy {approx_day} Approximation Day!"
+    tweet = "Happy " + str(approx_day) +" Approximation Day!"
 
     if not test:
         import config as c
         tw = twitter.Twitter(auth=twitter.OAuth(
             c.token, c.secret, c.consumer_key, c.consumer_secret))
         results = tw.statuses.update(status=tweet)
-    print(f"updated status: {tweet}")
+    print("updated status: " + tweet)

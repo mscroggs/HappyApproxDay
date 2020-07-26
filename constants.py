@@ -5,7 +5,8 @@ constants = [
     (math.pi, u"\u03C0", "pi"),
     (2 * math.pi, u"\u03C4", "tau"),
     (math.sqrt(2), u"\u221A2", "root2"),
-    (math.sqrt(3), u"\u221A3", "root3")
+    (math.sqrt(3), u"\u221A3", "root3"),
+    (math.e, "e", "e")
 ]
 
 
@@ -32,7 +33,7 @@ class Difference(BaseConstant):
     def __init__(self, a, b):
         super().__init__(
             a.value - b.value,
-            f"{a}-{b}",
+            str(a) + "-" + str(b),
             a.includes.union(b.includes))
 
 
@@ -40,7 +41,7 @@ class Sum(BaseConstant):
     def __init__(self, a, b):
         super().__init__(
             a.value + b.value,
-            f"{a}+{b}",
+            str(a) + "+" + str(b),
             a.includes.union(b.includes))
 
 
@@ -49,7 +50,7 @@ class Multiple(BaseConstant):
         assert isinstance(a, int)
         super().__init__(
             a * b.value,
-            f"{a}{b}",
+            str(a) + str(b),
             b.includes.union({"multiple"}))
 
 
