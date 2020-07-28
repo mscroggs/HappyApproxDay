@@ -15,9 +15,23 @@ approx_day = get_approximation_day(now.day, now.month)
 if approx_day is not None:
     tweet = "Happy " + str(approx_day) + " Approximation Day!"
 
-    if not test:
+    tweet2 = str(approx_day) + " = " + str(approx_day.value)
+    tweet2 += "\n\n"
+    tweet2 += "Today = " + str(now.day) + "/" + str(now.month)
+    tweet2 += " = " + str(now.day / now.month)
+
+    if test:
+        print("If not in test mode, I would've tweeted:")
+        print("   ", tweet)
+        print("   ", tweet2)
+    else:
         import config as c
         tw = twitter.Twitter(auth=twitter.OAuth(
             c.token, c.secret, c.consumer_key, c.consumer_secret))
-        results = tw.statuses.update(status=tweet)
-    print("updated status: " + tweet)
+        result = tw.statuses.update(status=tweet)
+        print("updated status: " + tweet)
+
+        result = tw.statuses.update(
+            status="@" + c.username + " " + tweet2,
+            in_reply_to_status_id=result["id"])
+        print("updated status: " + tweet2)
