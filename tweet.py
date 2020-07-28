@@ -18,7 +18,10 @@ if approx_day is not None:
     tweet2 = str(approx_day) + " = " + str(approx_day.value)
     tweet2 += "\n\n"
     tweet2 += "Today = " + str(now.day) + "/" + str(now.month)
-    tweet2 += " = " + str(now.day / now.month)
+    if now.day % now.month == 0:
+        tweet2 += " = " + str(now.day // now.month)
+    else:
+        tweet2 += " = " + str(now.day / now.month)
 
     if test:
         print("If not in test mode, I would've tweeted:")
