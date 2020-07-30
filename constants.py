@@ -3,7 +3,7 @@ import math
 
 constants = [
     (math.pi, u"\u03C0", "pi"),
-    (2 * math.pi, u"\u03C4", "tau"),
+    (2 * math.pi, u"\u03C4", "tau",),
     (math.sqrt(2), u"\u221A2", "root2"),
     (math.sqrt(3), u"\u221A3", "root3"),
     (math.e, "e", "e")
@@ -22,6 +22,12 @@ class BaseConstant:
 
     def __str__(self):
         return self.string
+
+    def to_html(self):
+        map = {u"\u03C0": "&pi;", u"\u03C4": "&tau;",
+               u"\u221A2": "&radic;2", u"\u221A3": "&radic;3"}
+        return "".join([map[char] if char in map else char
+                        for char in self.string])
 
 
 class Constant(BaseConstant):
