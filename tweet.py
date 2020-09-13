@@ -28,7 +28,7 @@ if approx_day is not None:
 
     error = ((now.day / now.month) - approx_day.value) / (now.day / now.month)
     tweet2 += "error = "
-    tweet2 += str(math.floor(error * 1000) / 100) + "%"
+    tweet2 += str(math.floor(error * 1000000) / 100000) + "%"
 
     if test:
         print("If not in test mode, I would've tweeted:")
