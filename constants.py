@@ -6,7 +6,8 @@ constants = [
     (2 * math.pi, u"\u03C4", "tau",),
     (math.sqrt(2), u"\u221A2", "root2"),
     (math.sqrt(3), u"\u221A3", "root3"),
-    (math.e, "e", "e")
+    (math.e, "e", "e"),
+    ((1 + math.sqrt(5)) / 2, u"\u03D5", "phi")
 ]
 
 
@@ -90,10 +91,16 @@ def combine(options):
                 new.append(Difference(c, d))
             elif d.value > c.value:
                 new.append(Difference(d, c))
-            if "+" not in str(c) and "-" not in str(c):
-                if "+" not in str(d) and "-" not in str(d):
-                    if not math.isclose(c.value, d.value):
-                        new.append(Product(c, d))
+            if (
+                "+" not in str(c)
+                and "-" not in str(c)
+                and "multiple" not in c.includes
+                and "+" not in str(d)
+                and "-" not in str(d)
+                and "multiple" not in d.includes
+                and not math.isclose(c.value, d.value)
+            ):
+                new.append(Product(c, d))
     out = []
     for n in new:
         for c in options:
