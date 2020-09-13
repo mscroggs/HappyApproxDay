@@ -33,7 +33,7 @@ if approx_day is not None:
     if test:
         print("If not in test mode, I would've tweeted:")
         print("   ", tweet)
-        print("   ", tweet2)
+        print("   ", "\n    ".join(tweet2.split("\n")))
     else:
         import config as c
         tw = twitter.Twitter(auth=twitter.OAuth(
