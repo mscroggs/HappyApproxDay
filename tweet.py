@@ -2,12 +2,13 @@ from datetime import datetime
 from dayfinder import get_approximation_day
 import sys
 import math
-import twitter
 
 test = "test" in sys.argv
 
 if test:
     print("Running in test mode. Tweets will not be sent")
+else:
+    import twitter
 
 now = datetime.now()
 
@@ -26,7 +27,7 @@ if approx_day is not None:
 
     tweet2 += "\n\n"
 
-    error = ((now.day / now.month) - approx_day.value) / (now.day / now.month)
+    error = abs((now.day / now.month) - approx_day.value) / (now.day / now.month)
     tweet2 += "error = "
     tweet2 += str(math.floor(error * 1000000) / 100000) + "%"
 
