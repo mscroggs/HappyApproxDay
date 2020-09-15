@@ -27,7 +27,8 @@ if approx_day is not None:
 
     tweet2 += "\n\n"
 
-    error = abs((now.day / now.month) - approx_day.value) / (now.day / now.month)
+    error = abs((now.day / now.month) - approx_day.value)
+    error /= (now.day / now.month)
     tweet2 += "error = "
     tweet2 += str(math.floor(error * 1000000) / 100000) + "%"
 
