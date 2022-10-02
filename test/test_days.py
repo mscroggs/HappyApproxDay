@@ -24,4 +24,4 @@ def test_regularity(month):
           monthnames[month], "will have tweets")
 
     # Assert that at most one day a month doesn't get a tweet
-    assert count == days_in_month[month] - 1
+    assert count >= days_in_month[month] - 1
