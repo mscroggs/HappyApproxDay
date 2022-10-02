@@ -22,4 +22,6 @@ def test_regularity(month):
             assert abs(approx.value - day / month) < 0.1
     print(count, "/", days_in_month[month], "days in",
           monthnames[month], "will have tweets")
-    assert count > 18
+
+    # Assert that at most one day a month doesn't get a tweet
+    assert count == days_in_month[month] - 1

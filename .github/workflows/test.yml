@@ -30,4 +30,6 @@ jobs:
       - run: python -m pytest test
         name: Run tests
       - run: python tweet.py test
-        name: Test
+        name: Test tweeter
+      - run: python make_list.py
+        name: Run make_list.py
