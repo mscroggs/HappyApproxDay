@@ -3,3 +3,7 @@ consumer_key = "..."
 consumer_secret = "..."
 token = "..."
 secret = "..."
+
+mdon_key = "..."
+mdon_secret = "..."
+mdon_token = "..."
