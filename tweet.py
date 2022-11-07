@@ -44,7 +44,7 @@ if approx_day is not None:
             c.token, c.secret, c.consumer_key, c.consumer_secret))
 
         mdon = mastodon.Mastodon(
-            access_token=c.token, api_base_url="https://mathstodon.xyz")
+            access_token="mdon.secret", api_base_url="https://mathstodon.xyz")
 
         result = tw.statuses.update(status=tweet)
         mresult = mdon.toot(tweet)
@@ -53,7 +53,7 @@ if approx_day is not None:
         tw.statuses.update(
             status="@" + c.username + " " + tweet2,
             in_reply_to_status_id=result["id"])
-        mdon.toot(
+        mdon.status_post(
             "@" + c.username + " " + tweet2,
             in_reply_to_id=mresult["id"])
         print("updated status: " + tweet2)
