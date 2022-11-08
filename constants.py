@@ -11,6 +11,12 @@ constants = [
 ]
 
 
+def str_to_combine(value):
+    if isinstance(value, BaseConstant):
+        return value.str_to_combine()
+    return str(value)
+
+
 class BaseConstant:
     def __init__(self, value, string, includes):
         assert value > 0
@@ -46,7 +52,7 @@ class Difference(BaseConstant):
     def __init__(self, a, b):
         super().__init__(
             a.value - b.value,
-            a.str_to_combine() + "-" + b.str_to_combine(),
+            str_to_combine(a) + "-" + str_to_combine(b),
             a.includes.union(b.includes))
 
 
@@ -54,7 +60,7 @@ class Sum(BaseConstant):
     def __init__(self, a, b):
         super().__init__(
             a.value + b.value,
-            a.str_to_combine() + "+" + b.str_to_combine(),
+            str_to_combine(a) + "+" + str_to_combine(b),
             a.includes.union(b.includes))
 
 
@@ -62,7 +68,7 @@ class Product(BaseConstant):
     def __init__(self, a, b):
         super().__init__(
             a.value * b.value,
-            a.str_to_combine() + b.str_to_combine(),
+            str_to_combine(a) + str_to_combine(b),
             a.includes.union(b.includes))
 
 
@@ -71,7 +77,7 @@ class Multiple(BaseConstant):
         assert isinstance(a, int)
         super().__init__(
             a * b.value,
-            a.str_to_combine() + b.str_to_combine(),
+            str_to_combine(a) + str_to_combine(b),
             b.includes.union({"multiple"}))
 
 
