@@ -30,17 +30,23 @@ class BaseConstant:
         return "".join([map[char] if char in map else char
                         for char in self.string])
 
+    def str_to_combine(self):
+        return "(" + self.string + ")"
+
 
 class Constant(BaseConstant):
     def __init__(self, value, string, name):
         super().__init__(value, string, {name})
+
+    def str_to_combine(self):
+        return self.string
 
 
 class Difference(BaseConstant):
     def __init__(self, a, b):
         super().__init__(
             a.value - b.value,
-            str(a) + "-" + str(b),
+            a.str_to_combine() + "-" + b.str_to_combine(),
             a.includes.union(b.includes))
 
 
@@ -48,7 +54,7 @@ class Sum(BaseConstant):
     def __init__(self, a, b):
         super().__init__(
             a.value + b.value,
-            str(a) + "+" + str(b),
+            a.str_to_combine() + "+" + b.str_to_combine(),
             a.includes.union(b.includes))
 
 
@@ -56,7 +62,7 @@ class Product(BaseConstant):
     def __init__(self, a, b):
         super().__init__(
             a.value * b.value,
-            str(a) + str(b),
+            a.str_to_combine() + b.str_to_combine(),
             a.includes.union(b.includes))
 
 
@@ -65,7 +71,7 @@ class Multiple(BaseConstant):
         assert isinstance(a, int)
         super().__init__(
             a * b.value,
-            str(a) + str(b),
+            a.str_to_combine() + b.str_to_combine(),
             b.includes.union({"multiple"}))
 
 
