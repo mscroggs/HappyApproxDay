@@ -7,7 +7,8 @@ constants = [
     (math.sqrt(2), u"\u221A2", "root2"),
     (math.sqrt(3), u"\u221A3", "root3"),
     (math.e, "e", "e"),
-    ((1 + math.sqrt(5)) / 2, u"\u03D5", "phi")
+    ((1 + math.sqrt(5)) / 2, u"\u03D5", "phi"),
+    (9.81, "g", "g"),
 ]
 
 
