@@ -8,7 +8,6 @@ test = "test" in sys.argv
 if test:
     print("Running in test mode. Tweets will not be sent")
 else:
-    import twitter
     import mastodon
 
 now = datetime.now()
@@ -40,19 +39,13 @@ if approx_day is not None:
         print("   ", "\n    ".join(tweet2.split("\n")))
     else:
         import config as c
-        tw = twitter.Twitter(auth=twitter.OAuth(
-            c.token, c.secret, c.consumer_key, c.consumer_secret))
 
         mdon = mastodon.Mastodon(
             access_token="mdon.secret", api_base_url="https://mathstodon.xyz")
 
-        result = tw.statuses.update(status=tweet)
         mresult = mdon.toot(tweet)
         print("updated status: " + tweet)
 
-        tw.statuses.update(
-            status="@" + c.username + " " + tweet2,
-            in_reply_to_status_id=result["id"])
         mdon.status_post(
             "@" + c.username + " " + tweet2,
             in_reply_to_id=mresult["id"])
