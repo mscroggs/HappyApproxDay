@@ -2,6 +2,7 @@ from datetime import datetime
 from dayfinder import get_approximation_day
 import sys
 import math
+from atproto import Client, models
 
 test = "test" in sys.argv
 
@@ -40,6 +41,7 @@ if approx_day is not None:
     else:
         import config as c
 
+        # Mastodon
         mdon = mastodon.Mastodon(
             access_token="mdon.secret", api_base_url="https://mathstodon.xyz")
 
@@ -50,3 +52,13 @@ if approx_day is not None:
             "@" + c.username + " " + tweet2,
             in_reply_to_id=mresult["id"])
         print("updated status: " + tweet2)
+
+        # Bluesky
+        client = Client()
+        with open("bsky.secret") as f:
+            app_password = f.read().strip()
+        client.login(c.bky_user, app_password)
+
+        first_post = models.create_strong_ref(client.send_post(tweet))
+        client.send_post(text=tweet2, reply_to=models.AppBskyFeedPost.ReplyRef(
+            parent=root_post_ref, root=root_post_ref))
