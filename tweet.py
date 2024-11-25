@@ -55,10 +55,8 @@ if approx_day is not None:
 
         # Bluesky
         client = Client()
-        with open("bsky.secret") as f:
-            app_password = f.read().strip()
-        client.login(c.bsky_user, app_password)
+        client.login(c.bsky_user, c.bsky_app_password)
 
         first_post = models.create_strong_ref(client.send_post(tweet))
         client.send_post(text=tweet2, reply_to=models.AppBskyFeedPost.ReplyRef(
-            parent=root_post_ref, root=root_post_ref))
+            parent=first_post, root=first_post))
