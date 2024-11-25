@@ -30,7 +30,7 @@ class BaseConstant:
         return abs(value - self.value) / self.value
 
     def __str__(self):
-        return str(self.as_sympy()).replace("*", "")
+        return str(self.as_sympy()).replace("*", "").replace(" ", "")
 
     def to_html(self):
         map = {u"\u03C0": "&pi;", u"\u03C4": "&tau;",
@@ -109,6 +109,42 @@ class Multiple(BaseConstant):
         return self.a * self.b.as_sympy()
 
 
+class Sin(BaseConstant):
+    def __init__(self, a):
+        super().__init__(
+            math.sin(a.value),
+            "sin(" + str_to_combine(a) + ")",
+            a.includes.union({"sin"}))
+        self.a = a
+
+    def as_sympy(self):
+        return sympy.sin(self.a.as_sympy())
+
+
+class Cos(BaseConstant):
+    def __init__(self, a):
+        super().__init__(
+            math.cos(a.value),
+            "cos(" + str_to_combine(a) + ")",
+            a.includes.union({"cos"}))
+        self.a = a
+
+    def as_sympy(self):
+        return sympy.cos(self.a.as_sympy())
+
+
+class Tan(BaseConstant):
+    def __init__(self, a):
+        super().__init__(
+            math.tan(a.value),
+            "tan(" + str_to_combine(a) + ")",
+            a.includes.union({"tan"}))
+        self.a = a
+
+    def as_sympy(self):
+        return sympy.tan(self.a.as_sympy())
+
+
 def all_constants(combos):
     options = [Constant(*i) for i in constants]
 
@@ -123,6 +159,14 @@ def combine(options):
         for c in options:
             if "multiple" not in c.includes:
                 new.append(Multiple(i, c))
+
+    for c in options:
+        if math.sin(c.value) > 0:
+            new.append(Sin(c))
+        if math.cos(c.value) > 0:
+            new.append(Cos(c))
+        if math.tan(c.value) > 0:
+            new.append(Tan(c))
 
     for c, d in product(options, options):
         if len(c.includes.intersection(d.includes)) == 0:
