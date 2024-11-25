@@ -57,7 +57,7 @@ if approx_day is not None:
         client = Client()
         with open("bsky.secret") as f:
             app_password = f.read().strip()
-        client.login(c.bky_user, app_password)
+        client.login(c.bsky_user, app_password)
 
         first_post = models.create_strong_ref(client.send_post(tweet))
         client.send_post(text=tweet2, reply_to=models.AppBskyFeedPost.ReplyRef(
