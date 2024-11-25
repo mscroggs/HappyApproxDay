@@ -1,5 +1,6 @@
 from itertools import product
 import math
+import sympy
 
 constants = [
     (math.pi, u"\u03C0", "pi"),
@@ -29,13 +30,16 @@ class BaseConstant:
         return abs(value - self.value) / self.value
 
     def __str__(self):
-        return self.string
+        return str(self.as_sympy()).replace("*", "")
 
     def to_html(self):
         map = {u"\u03C0": "&pi;", u"\u03C4": "&tau;",
                u"\u221A2": "&radic;2", u"\u221A3": "&radic;3"}
         return "".join([map[char] if char in map else char
                         for char in self.string])
+
+    def as_sympy(self):
+        raise NotImplementedError()
 
     def str_to_combine(self):
         return "(" + self.string + ")"
@@ -48,6 +52,9 @@ class Constant(BaseConstant):
     def str_to_combine(self):
         return self.string
 
+    def as_sympy(self):
+        return sympy.Symbol(self.string)
+
 
 class Difference(BaseConstant):
     def __init__(self, a, b):
@@ -55,6 +62,11 @@ class Difference(BaseConstant):
             a.value - b.value,
             str_to_combine(a) + "-" + str_to_combine(b),
             a.includes.union(b.includes))
+        self.a = a
+        self.b = b
+
+    def as_sympy(self):
+        return self.a.as_sympy() - self.b.as_sympy()
 
 
 class Sum(BaseConstant):
@@ -63,6 +75,11 @@ class Sum(BaseConstant):
             a.value + b.value,
             str_to_combine(a) + "+" + str_to_combine(b),
             a.includes.union(b.includes))
+        self.a = a
+        self.b = b
+
+    def as_sympy(self):
+        return self.a.as_sympy() + self.b.as_sympy()
 
 
 class Product(BaseConstant):
@@ -71,6 +88,11 @@ class Product(BaseConstant):
             a.value * b.value,
             str_to_combine(a) + str_to_combine(b),
             a.includes.union(b.includes))
+        self.a = a
+        self.b = b
+
+    def as_sympy(self):
+        return self.a.as_sympy() * self.b.as_sympy()
 
 
 class Multiple(BaseConstant):
@@ -80,6 +102,11 @@ class Multiple(BaseConstant):
             a * b.value,
             str_to_combine(a) + str_to_combine(b),
             b.includes.union({"multiple"}))
+        self.a = a
+        self.b = b
+
+    def as_sympy(self):
+        return self.a * self.b.as_sympy()
 
 
 def all_constants(combos):
