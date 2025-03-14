@@ -52,6 +52,7 @@ class BaseConstant(ABC):
     def definitions_included(self):
         pass
 
+
 class Constant(BaseConstant):
     def __init__(self, value, string, name, definition=None):
         super().__init__(value, string, {name})
