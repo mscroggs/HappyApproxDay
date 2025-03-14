@@ -1,15 +1,17 @@
+from abc import ABC, abstractmethod
 from itertools import product
 import math
 import sympy
 
+
 constants = [
-    (math.pi, u"\u03C0", "pi"),
-    (2 * math.pi, u"\u03C4", "tau",),
+    (math.pi, u"\u03C0", "pi", "the circle constant"),
+    (2 * math.pi, u"\u03C4", "tau", "the hipster circle constant"),
     (math.sqrt(2), u"\u221A2", "root2"),
     (math.sqrt(3), u"\u221A3", "root3"),
-    (math.e, "e", "e"),
-    ((1 + math.sqrt(5)) / 2, u"\u03D5", "phi"),
-    (9.81, "g", "g"),
+    (math.e, "e", "e", "Euler's number"),
+    ((1 + math.sqrt(5)) / 2, u"\u03D5", "phi", "the golden ratio"),
+    (9.81, "g", "g", "acceleration due to gravity"),
 ]
 
 
@@ -19,7 +21,7 @@ def str_to_combine(value):
     return str(value)
 
 
-class BaseConstant:
+class BaseConstant(ABC):
     def __init__(self, value, string, includes):
         assert value > 0
         self.value = value
@@ -36,24 +38,36 @@ class BaseConstant:
         map = {u"\u03C0": "&pi;", u"\u03C4": "&tau;",
                u"\u221A2": "&radic;2", u"\u221A3": "&radic;3"}
         return "".join([map[char] if char in map else char
-                        for char in self.string])
+                        for char in str(self)])
 
+    @abstractmethod
     def as_sympy(self):
-        raise NotImplementedError()
+        pass
 
     def str_to_combine(self):
         return "(" + self.string + ")"
 
+    @property
+    @abstractmethod
+    def definitions_included(self):
+        pass
 
 class Constant(BaseConstant):
-    def __init__(self, value, string, name):
+    def __init__(self, value, string, name, definition=None):
         super().__init__(value, string, {name})
+        self.definition = definition
 
     def str_to_combine(self):
         return self.string
 
     def as_sympy(self):
         return sympy.Symbol(self.string)
+
+    @property
+    def definitions_included(self):
+        if self.definition is None:
+            return set()
+        return {f"{self} is {self.definition}"}
 
 
 class Difference(BaseConstant):
@@ -68,6 +82,10 @@ class Difference(BaseConstant):
     def as_sympy(self):
         return self.a.as_sympy() - self.b.as_sympy()
 
+    @property
+    def definitions_included(self):
+        return self.a.definitions_included.union(self.b.definitions_included)
+
 
 class Sum(BaseConstant):
     def __init__(self, a, b):
@@ -81,6 +99,10 @@ class Sum(BaseConstant):
     def as_sympy(self):
         return self.a.as_sympy() + self.b.as_sympy()
 
+    @property
+    def definitions_included(self):
+        return self.a.definitions_included.union(self.b.definitions_included)
+
 
 class Product(BaseConstant):
     def __init__(self, a, b):
@@ -93,6 +115,10 @@ class Product(BaseConstant):
 
     def as_sympy(self):
         return self.a.as_sympy() * self.b.as_sympy()
+
+    @property
+    def definitions_included(self):
+        return self.a.definitions_included.union(self.b.definitions_included)
 
 
 class Multiple(BaseConstant):
@@ -108,6 +134,10 @@ class Multiple(BaseConstant):
     def as_sympy(self):
         return self.a * self.b.as_sympy()
 
+    @property
+    def definitions_included(self):
+        return self.b.definitions_included
+
 
 class Sin(BaseConstant):
     def __init__(self, a):
@@ -119,6 +149,10 @@ class Sin(BaseConstant):
 
     def as_sympy(self):
         return sympy.sin(self.a.as_sympy())
+
+    @property
+    def definitions_included(self):
+        return self.b.definitions_included
 
 
 class Cos(BaseConstant):
@@ -132,6 +166,10 @@ class Cos(BaseConstant):
     def as_sympy(self):
         return sympy.cos(self.a.as_sympy())
 
+    @property
+    def definitions_included(self):
+        return self.b.definitions_included
+
 
 class Tan(BaseConstant):
     def __init__(self, a):
@@ -143,6 +181,10 @@ class Tan(BaseConstant):
 
     def as_sympy(self):
         return sympy.tan(self.a.as_sympy())
+
+    @property
+    def definitions_included(self):
+        return self.b.definitions_included
 
 
 def all_constants(combos):

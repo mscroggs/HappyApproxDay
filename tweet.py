@@ -2,7 +2,6 @@ from datetime import datetime
 from dayfinder import get_approximation_day
 import sys
 import math
-from atproto import Client, models
 
 test = "test" in sys.argv
 
@@ -10,6 +9,7 @@ if test:
     print("Running in test mode. Tweets will not be sent")
 else:
     import mastodon
+    from atproto import Client, models
 
 now = datetime.now()
 
@@ -19,6 +19,11 @@ if approx_day is not None:
     tweet = "Happy " + str(approx_day) + " Approximation Day!"
 
     tweet2 = str(approx_day) + " = " + str(approx_day.value)
+
+    if len(approx_day.definitions_included) > 0:
+        tweet2 += ",\nwhere " + ",\n".join(approx_day.definitions_included)
+        tweet2 += "."
+
     tweet2 += "\n\n"
     tweet2 += "Today = " + str(now.day) + "/" + str(now.month)
     if now.day % now.month == 0:
